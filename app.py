@@ -1,41 +1,59 @@
 from flask import Flask, jsonify, request
-from posts import get_posts
 
 app = Flask(__name__)
 
 
-@app.route('/posts/')
-def main():
-    posts = get_posts()
-
-    return jsonify(posts), 200
-
-
-@app.route('/posts/<int:index>/')
-def get_post(index):
-    posts = get_posts()
-    post = posts[index] if len(posts) > index else "404"
-
-    return jsonify(post), 200
-
-
-@app.route('/posts/', methods=['POST'])
-def add_post():
-    post = request.get_json()
-
-    posts = get_posts()
-
-    posts.append(post)
-
-    return jsonify(posts), 201
+products = [
+  {
+    "name": "Laptop",
+    "price": 2155
+  },
+  {
+    "name": "Teclado",
+    "price": 35
+  },
+  {
+    "name": "Mouse",
+    "price": 15
+  }
+]
 
 
-@app.route('/posts/<int:index>/', methods=['DELETE'])
-def del_post(index):
-    posts = get_posts()
-    posts.pop(index)
+@app.route('/products')
+def index():
+    return jsonify(products), 200
 
-    return jsonify(posts), 200
+
+@app.route('/products/<int:index>')
+def get_product(index):
+    product = products[index] if len(products) > index else "404"
+
+    return jsonify(product), 200
+
+
+@app.route('/products', methods=['POST'])
+def add_product():
+    product = request.get_json()
+
+    products.append(product)
+
+    return jsonify(products), 201
+
+
+@app.route('/products/<int:index>', methods=['PUT', 'PATCH'])
+def update_product(index):
+    product = request.get_json()
+
+    products[index] = product
+
+    return jsonify(products)
+
+
+@app.route('/products/<int:index>', methods=['DELETE'])
+def delete_product(index):
+    products.pop(index)
+
+    return jsonify(products), 200
 
 
 app.run()

@@ -1,4 +1,4 @@
-[
+products = [
   {
     "name": "Laptop",
     "price": 2155
